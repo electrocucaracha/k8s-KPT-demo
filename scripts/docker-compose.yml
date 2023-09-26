@@ -1,0 +1,59 @@
+---
+# SPDX-license-identifier: Apache-2.0
+##############################################################################
+# Copyright (c) 2022
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Apache License, Version 2.0
+# which accompanies this distribution, and is available at
+# http://www.apache.org/licenses/LICENSE-2.0
+##############################################################################
+
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=gitea
+    volumes:
+      - db-data:/var/lib/mysql
+    network_mode: host
+    healthcheck:
+      test: "/usr/bin/mysql --user=$MARIADB_USER --password=$MARIADB_PASSWORD --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
+  frontend:
+    image: gitea/gitea:1.19.0
+    restart: always
+    environment:
+      - USER_UID=1000
+      - USER_GID=100
+      - GITEA__database__DB_TYPE=mysql
+      - GITEA__database__HOST=localhost:3306
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=${MARIADB_USER}
+      - GITEA__database__PASSWD=${MARIADB_PASSWORD}
+    network_mode: host
+    volumes:
+      - "gitea-data:/data"
+      - ./gitea/app.ini:/data/gitea/conf/app.ini
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:3000 || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+volumes:
+  db-data:
+    driver: local
+  gitea-data:
+    driver: local
