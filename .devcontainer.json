@@ -1,15 +1,15 @@
 {
-    "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04",
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:1": {},
-        "ghcr.io/electrocucaracha/pkg-mgr_scripts/kubectl:latest": {
-            "pkg_krew_plugins_list": "ctx"
-        }
-    },
-    "hostRequirements": {
-        "cpus": 2,
-        "memory": "8gb"
-    },
-    "postCreateCommand": "cd scripts/; PROVISION_PHASES=install ./main.sh | tee ~/main.log",
-    "forwardPorts": [3000]
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {},
+    "ghcr.io/electrocucaracha/pkg-mgr_scripts/kubectl:latest": {
+      "pkg_krew_plugins_list": "ctx"
+    }
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb"
+  },
+  "postCreateCommand": "cd scripts/; PROVISION_PHASES=install ./main.sh | tee ~/main.log",
+  "forwardPorts": [3000]
 }

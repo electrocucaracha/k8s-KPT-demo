@@ -1,2 +1,4 @@
 .vagrant
 *.dic
+node_modules/
+package*.json
