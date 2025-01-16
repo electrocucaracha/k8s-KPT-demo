@@ -31,6 +31,5 @@ runs:
       shell: bash
       if: failure()
       run: |
-        vm_stat
-        top -l 1 -n 0
         VBoxManage list runningvms --long
+        cat ~/VirtualBox\ VMs/*/Logs/*.log
